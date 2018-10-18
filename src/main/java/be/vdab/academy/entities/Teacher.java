@@ -12,10 +12,12 @@ import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import be.vdab.academy.enums.Gender;
@@ -58,6 +60,10 @@ public class Teacher implements Serializable {
 	@Column(name = "bijnaam")
 	private Set<String> nicknames;
 	
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+	@JoinColumn(name = "campusId")
+	private Campus campus;
+	
 	protected Teacher() {}
 	
 	public Teacher(
@@ -65,12 +71,15 @@ public class Teacher implements Serializable {
 			final String lastName,
 			final Gender gender,
 			final BigDecimal wages,
-			final String emailAddress) {
+			final String emailAddress,
+			final Campus campus) {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.gender = gender.toString();
 		this.wages = wages;
 		this.emailAddress = emailAddress;
+		
+		setCampus(campus);
 		
 		this.nicknames = new LinkedHashSet<>();
 	}
@@ -123,5 +132,15 @@ public class Teacher implements Serializable {
 	
 	public boolean removeNickname(final String nickname) {
 		return nicknames.remove(nickname);
+	}
+	
+	public void setCampus(final Campus campus) {
+		if (campus == null) throw new NullPointerException();
+		
+		this.campus = campus;
+	}
+	
+	public Campus getCampus() {
+		return campus;
 	}
 }

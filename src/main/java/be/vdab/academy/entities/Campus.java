@@ -50,15 +50,15 @@ public class Campus implements Serializable {
 		this.phoneNumbers = new LinkedHashSet<>();
 	}
 	
-	public final long getId() {
+	public long getId() {
 		return id;
 	}
 	
-	public final String getName() {
+	public String getName() {
 		return name;
 	}
 	
-	public final Address getAddress() {
+	public Address getAddress() {
 		return address;
 	}
 	

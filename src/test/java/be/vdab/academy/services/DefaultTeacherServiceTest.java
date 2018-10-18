@@ -13,10 +13,12 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import be.vdab.academy.entities.Campus;
 import be.vdab.academy.entities.Teacher;
 import be.vdab.academy.enums.Gender;
 import be.vdab.academy.exceptions.TeacherNotFoundException;
 import be.vdab.academy.repositories.TeacherRepository;
+import be.vdab.academy.valueobjects.Address;
 
 @RunWith(MockitoJUnitRunner.class)
 public class DefaultTeacherServiceTest {
@@ -26,11 +28,13 @@ public class DefaultTeacherServiceTest {
 	@Mock
 	private TeacherRepository teacherRepository;
 	private Teacher teacher;
+	private Campus campus;
 	
 	@Before
 	public void before() {
+		campus = new Campus("", new Address("", "", "", ""));
 		teacher = new Teacher("test", "test", Gender.MALE,
-				BigDecimal.valueOf(100L), "test@fietsacademy.be");
+				BigDecimal.valueOf(100L), "test@fietsacademy.be", campus);
 		when(teacherRepository.read(1)).thenReturn(Optional.of(teacher));
 		when(teacherRepository.read(-1)).thenReturn(Optional.empty());
 		

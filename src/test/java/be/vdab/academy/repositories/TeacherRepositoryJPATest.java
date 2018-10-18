@@ -22,14 +22,17 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import be.vdab.academy.entities.Campus;
 import be.vdab.academy.entities.Teacher;
 import be.vdab.academy.enums.Gender;
 import be.vdab.academy.queryresults.CountTeachersByWages;
 import be.vdab.academy.queryresults.IdAndEmailAddress;
+import be.vdab.academy.valueobjects.Address;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
+@Sql("/insertCampus.sql")
 @Sql("/insertTeacher.sql")
 @Import(TeacherRepositoryJPA.class)
 public class TeacherRepositoryJPATest
@@ -44,11 +47,13 @@ extends AbstractTransactionalJUnit4SpringContextTests {
 	private static final String TEACHERS = "docenten";
 	
 	private Teacher teacher;
+	private Campus campus;
 	
 	@Before
 	public void before() {
+		campus = new Campus("", new Address("", "", "", ""));
 		teacher = new Teacher("test", "test", Gender.MALE,
-				BigDecimal.TEN, "test@fietsacademy.be");
+				BigDecimal.TEN, "test@fietsacademy.be", campus);
 	}
 	
 	private final long idOfTestTeacher() {
@@ -184,6 +189,8 @@ extends AbstractTransactionalJUnit4SpringContextTests {
 	
 	@Test
 	public void create() {
+		manager.persist(campus);
+		
 		int countTeachers = super.countRowsInTable(TEACHERS);
 		repository.create(teacher);
 		
@@ -191,6 +198,10 @@ extends AbstractTransactionalJUnit4SpringContextTests {
 		assertNotEquals(0, teacher.getId());
 		assertEquals(1, 
 				super.countRowsInTableWhere(TEACHERS, "id=" + teacher.getId()));
+		assertEquals(campus.getId(),
+				super.jdbcTemplate.queryForObject(
+					"SELECT campusId FROM docenten WHERE id=?",
+					Long.class, teacher.getId()).longValue());
 	}
 	
 	@Test
@@ -215,6 +226,8 @@ extends AbstractTransactionalJUnit4SpringContextTests {
 	
 	@Test
 	public void addNickname() {
+		manager.persist(campus);
+		
 		repository.create(teacher);
 		teacher.addNickname("test");
 		manager.flush();
@@ -222,5 +235,12 @@ extends AbstractTransactionalJUnit4SpringContextTests {
 		assertEquals("test", super.jdbcTemplate.queryForObject(
 				"SELECT bijnaam FROM docentenbijnamen WHERE docentid=?",
 				String.class, teacher.getId()));
+	}
+	
+	@Test
+	public void campusLazyLoaded() {
+		final Teacher teacher = repository.read(idOfTestTeacher()).get();
+		
+		assertEquals("test", teacher.getCampus().getName());
 	}
 }

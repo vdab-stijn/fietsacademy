@@ -10,17 +10,20 @@ import org.junit.Before;
 import org.junit.Test;
 
 import be.vdab.academy.enums.Gender;
+import be.vdab.academy.valueobjects.Address;
 
 public class TeacherTest {
 
 	private static final BigDecimal ORIGINAL_WAGES = BigDecimal.valueOf(200L);
 	
 	private Teacher teacher1;
+	private Campus campus1;
 	
 	@Before
 	public void before() {
+		campus1 = new Campus("test", new Address("", "", "", ""));
 		teacher1 = new Teacher("test", "test", Gender.MALE,
-				ORIGINAL_WAGES, "test@fietsacademy.be");
+				ORIGINAL_WAGES, "test@fietsacademy.be", campus1);
 	}
 	
 	@Test
