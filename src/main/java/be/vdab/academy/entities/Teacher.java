@@ -4,12 +4,18 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.Table;
 
 import be.vdab.academy.enums.Gender;
@@ -46,6 +52,12 @@ public class Teacher implements Serializable {
 	@Column(name = "emailAdres")
 	private String emailAddress;
 	
+	@ElementCollection
+	@CollectionTable(name = "docentenbijnamen",
+		joinColumns = @JoinColumn(name = "docentId"))
+	@Column(name = "bijnaam")
+	private Set<String> nicknames;
+	
 	protected Teacher() {}
 	
 	public Teacher(
@@ -59,6 +71,8 @@ public class Teacher implements Serializable {
 		this.gender = gender.toString();
 		this.wages = wages;
 		this.emailAddress = emailAddress;
+		
+		this.nicknames = new LinkedHashSet<>();
 	}
 	
 	public long getId() {
@@ -94,5 +108,20 @@ public class Teacher implements Serializable {
 		= BigDecimal.ONE.add(percentage.divide(BigDecimal.valueOf(100L)));
 		
 		wages = wages.multiply(factor, new MathContext(2, RoundingMode.HALF_UP));
+	}
+	
+	public Set<String> getNicknames() {
+		return Collections.unmodifiableSet(nicknames);
+	}
+	
+	public boolean addNickname(final String nickname) {
+		if (nickname.trim().isEmpty())
+			throw new IllegalArgumentException("A nickname can't be empty");
+		
+		return nicknames.add(nickname);
+	}
+	
+	public boolean removeNickname(final String nickname) {
+		return nicknames.remove(nickname);
 	}
 }

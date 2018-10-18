@@ -7,3 +7,6 @@ INSERT INTO docenten(voornaam,familienaam,wedde,emailAdres,geslacht)
 VALUES
 ('testM', 'testM', 1000, 'testM@fietsacademy.be','MAN'),
 ('testV', 'testV', 1000, 'testV@fietsacademy.be','VROUW');
+
+INSERT INTO docentenbijnamen(docentid,bijnaam)
+VALUES((SELECT id FROM docenten WHERE voornaam='testM'), 'test');

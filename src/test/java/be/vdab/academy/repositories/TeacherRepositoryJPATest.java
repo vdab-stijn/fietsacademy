@@ -204,4 +204,23 @@ extends AbstractTransactionalJUnit4SpringContextTests {
 		assertEquals(countTeachers - 1, super.countRowsInTable(TEACHERS));
 		assertEquals(0, super.countRowsInTableWhere(TEACHERS, "id=" + id));
 	}
+	
+	@Test
+	public void readNicknames() {
+		final Teacher teacher = repository.read(idOfTestTeacher()).get();
+		
+		assertEquals(1, teacher.getNicknames().size());
+		assertTrue(teacher.getNicknames().contains("test"));
+	}
+	
+	@Test
+	public void addNickname() {
+		repository.create(teacher);
+		teacher.addNickname("test");
+		manager.flush();
+		
+		assertEquals("test", super.jdbcTemplate.queryForObject(
+				"SELECT bijnaam FROM docentenbijnamen WHERE docentid=?",
+				String.class, teacher.getId()));
+	}
 }
