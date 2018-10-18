@@ -1,6 +1,7 @@
 package be.vdab.academy.repositories;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -16,6 +17,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import be.vdab.academy.entities.Campus;
 import be.vdab.academy.valueobjects.Address;
+import be.vdab.academy.valueobjects.PhoneNumber;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
@@ -59,5 +61,14 @@ extends AbstractTransactionalJUnit4SpringContextTests {
 				super.countRowsInTable(CAMPUSSES));
 		assertEquals(1,
 				super.countRowsInTableWhere(CAMPUSSES, "id=" + campus.getId()));
+	}
+	
+	@Test
+	public void readPhoneNumbers() {
+		final Campus campus = repository.read(idOfTestCampus()).get();
+		
+		assertEquals(1, campus.getPhoneNumbers().size());
+		assertTrue(campus.getPhoneNumbers().contains(
+				new PhoneNumber("1", false, "test")));
 	}
 }
