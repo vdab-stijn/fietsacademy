@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings version="2.1"
+	xmlns="http://xmlns.jcp.org/xml/ns/persistence/orm"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence/orm
+		http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
+	<named-query name="Teacher.findByWagesBetween">
+		<query>
+			SELECT d FROM Teacher d
+			WHERE d.wages BETWEEN :from AND :to
+			ORDER BY d.wages, d.id
+		</query>
+	</named-query>
+	<named-query name="Teacher.generalRaise">
+		<query>
+			UPDATE Teacher d
+			SET d.wages = d.wages * :factor
+		</query>
+	</named-query>
+</entity-mappings>

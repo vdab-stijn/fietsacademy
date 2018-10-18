@@ -10,17 +10,18 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 import be.vdab.academy.enums.Gender;
 
 @Entity
 @Table(name="docenten")
+/*
 @NamedQuery(
 	name="Teacher.findWagesBetween", 
 	query="SELECT d FROM Teacher d WHERE d.wages BETWEEN :from AND :to " +
 			"ORDER BY d.wages, d.id")
+*/
 public class Teacher implements Serializable {
 
 	/** Implements Serializable. */

@@ -20,6 +20,8 @@ public interface TeacherRepository {
 	BigDecimal findBiggestWages();
 	List<CountTeachersByWages> countTeachersByWages();
 	
+	int generalRaise(final BigDecimal percentage);
+	
 	void create(final Teacher teacher);
 	void delete(final long id);
 }

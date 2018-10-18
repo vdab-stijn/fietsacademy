@@ -41,7 +41,10 @@ public class TeacherRepositoryJPA implements TeacherRepository {
 //				.setParameter("to",  to)
 //				.getResultList();
 		return manager.createNamedQuery(
-				"Teacher.findByWagesBetween", Teacher.class).getResultList();
+				"Teacher.findByWagesBetween", Teacher.class)
+				.setParameter("from",  from)
+				.setParameter("to", to)
+				.getResultList();
 	}
 	
 	@Override
@@ -72,6 +75,17 @@ public class TeacherRepositoryJPA implements TeacherRepository {
 			"SELECT new be.vdab.academy.queryresults.CountTeachersByWages" +
 			"(d.wages, COUNT(d)) FROM Teacher d GROUP BY d.wages",
 			CountTeachersByWages.class).getResultList();
+	}
+	
+	@Override
+	public int generalRaise(final BigDecimal percentage) {
+		final BigDecimal factor =
+				BigDecimal.ONE.add(percentage.divide(BigDecimal.valueOf(100L)));
+		
+		return manager.createNamedQuery(
+				"Teacher.generalRaise")
+				.setParameter("factor", factor)
+				.executeUpdate();
 	}
 	
 	@Override

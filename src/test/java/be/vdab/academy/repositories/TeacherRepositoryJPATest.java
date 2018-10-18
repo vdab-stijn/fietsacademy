@@ -170,6 +170,19 @@ extends AbstractTransactionalJUnit4SpringContextTests {
 	}
 	
 	@Test
+	public void generalRaise() {
+		final int affected = repository.generalRaise(BigDecimal.TEN);
+		
+		assertEquals(super.countRowsInTable(TEACHERS), affected);
+		
+		BigDecimal newWages = super.jdbcTemplate.queryForObject(
+				"SELECT wedde FROM docenten WHERE id=?",
+				BigDecimal.class, idOfTestTeacher());
+		
+		assertEquals(0, BigDecimal.valueOf(1_100).compareTo(newWages));
+	}
+	
+	@Test
 	public void create() {
 		int countTeachers = super.countRowsInTable(TEACHERS);
 		repository.create(teacher);
