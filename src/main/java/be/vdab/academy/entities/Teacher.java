@@ -71,6 +71,15 @@ public class Teacher implements Serializable {
 			final String lastName,
 			final Gender gender,
 			final BigDecimal wages,
+			final String emailAddress) {
+		this(firstName, lastName, gender, wages, emailAddress, null);
+	}
+	
+	public Teacher(
+			final String firstName,
+			final String lastName,
+			final Gender gender,
+			final BigDecimal wages,
 			final String emailAddress,
 			final Campus campus) {
 		this.firstName = firstName;
@@ -79,7 +88,7 @@ public class Teacher implements Serializable {
 		this.wages = wages;
 		this.emailAddress = emailAddress;
 		
-		setCampus(campus);
+		if (campus != null) setCampus(campus);
 		
 		this.nicknames = new LinkedHashSet<>();
 	}
@@ -142,5 +151,35 @@ public class Teacher implements Serializable {
 	
 	public Campus getCampus() {
 		return campus;
+	}
+	
+	@Override
+	public boolean equals(final Object object) {
+		if (object == null || !(object instanceof Teacher)) return false;
+		if (getEmailAddress() == null) return false;
+		
+		final Teacher teacher = (Teacher)object;
+		
+		/*
+		return	getFirstName().equalsIgnoreCase(teacher.getFirstName()) &&
+				getLastName().equalsIgnoreCase(teacher.getLastName()) &&
+				getGender() == teacher.getGender() &&
+				getWages().equals(teacher.getWages()) &&
+				getEmailAddress().equalsIgnoreCase(teacher.getEmailAddress());
+		*/
+		return getEmailAddress().equalsIgnoreCase(teacher.getEmailAddress());
+	}
+	
+	@Override
+	public int hashCode() {
+		/*
+		return 13 *	(getFirstName().hashCode() +
+					getLastName().hashCode() +
+					getGender().hashCode() +
+					getWages().hashCode() +
+					getEmailAddress().hashCode());
+		*/
+		return getEmailAddress() == null ?
+				0 : getEmailAddress().toLowerCase().hashCode();
 	}
 }

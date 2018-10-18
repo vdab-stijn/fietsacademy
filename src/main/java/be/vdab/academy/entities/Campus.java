@@ -10,10 +10,12 @@ import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
@@ -42,12 +44,18 @@ public class Campus implements Serializable {
 	@OrderBy("fax")
 	private Set<PhoneNumber> phoneNumbers;
 	
+	@OneToMany(fetch = FetchType.LAZY)
+	@JoinColumn(name = "campusId")
+	@OrderBy("voornaam, familienaam")
+	private Set<Teacher> teachers;
+	
 	protected Campus() {}
 	public Campus(final String name, final Address address) {
 		this.name = name;
 		this.address = address;
 		
 		this.phoneNumbers = new LinkedHashSet<>();
+		this.teachers = new LinkedHashSet<>();
 	}
 	
 	public long getId() {
@@ -64,5 +72,29 @@ public class Campus implements Serializable {
 	
 	public Set<PhoneNumber> getPhoneNumbers() {
 		return Collections.unmodifiableSet(phoneNumbers);
+	}
+	
+	public boolean addTeacher(final Teacher teacher) {
+		if (teacher == null) throw new NullPointerException();
+		
+		return teachers.add(teacher);
+	}
+	
+	public Set<Teacher> getTeachers() {
+		return Collections.unmodifiableSet(teachers);
+	}
+	
+	@Override
+	public boolean equals(final Object object) {
+		if (object == null || !(object instanceof Campus)) return false;
+		
+		final Campus campus = (Campus)object;
+		
+		return	getName().equalsIgnoreCase(campus.getName());
+	}
+	
+	@Override
+	public int hashCode() {
+		return 37 * (getName().toUpperCase().hashCode());
 	}
 }

@@ -53,7 +53,9 @@ extends AbstractTransactionalJUnit4SpringContextTests {
 	public void before() {
 		campus = new Campus("", new Address("", "", "", ""));
 		teacher = new Teacher("test", "test", Gender.MALE,
-				BigDecimal.TEN, "test@fietsacademy.be", campus);
+				BigDecimal.TEN, "test@fietsacademy.be"/*, campus*/);
+		
+		campus.addTeacher(teacher);
 	}
 	
 	private final long idOfTestTeacher() {
@@ -193,6 +195,7 @@ extends AbstractTransactionalJUnit4SpringContextTests {
 		
 		int countTeachers = super.countRowsInTable(TEACHERS);
 		repository.create(teacher);
+		manager.flush();
 		
 		assertEquals(countTeachers + 1, super.countRowsInTable(TEACHERS));
 		assertNotEquals(0, teacher.getId());
@@ -202,6 +205,7 @@ extends AbstractTransactionalJUnit4SpringContextTests {
 				super.jdbcTemplate.queryForObject(
 					"SELECT campusId FROM docenten WHERE id=?",
 					Long.class, teacher.getId()).longValue());
+		assertTrue(campus.getTeachers().contains(teacher));
 	}
 	
 	@Test
@@ -237,10 +241,12 @@ extends AbstractTransactionalJUnit4SpringContextTests {
 				String.class, teacher.getId()));
 	}
 	
+	/*
 	@Test
 	public void campusLazyLoaded() {
 		final Teacher teacher = repository.read(idOfTestTeacher()).get();
 		
 		assertEquals("test", teacher.getCampus().getName());
 	}
+	*/
 }

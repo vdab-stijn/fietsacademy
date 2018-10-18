@@ -24,6 +24,7 @@ import be.vdab.academy.valueobjects.PhoneNumber;
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 @Import(CampusRepositoryJPA.class)
 @Sql("/insertCampus.sql")
+@Sql("/insertTeacher.sql")
 public class CampusRepositoryTest
 extends AbstractTransactionalJUnit4SpringContextTests {
 
@@ -70,5 +71,14 @@ extends AbstractTransactionalJUnit4SpringContextTests {
 		assertEquals(1, campus.getPhoneNumbers().size());
 		assertTrue(campus.getPhoneNumbers().contains(
 				new PhoneNumber("1", false, "test")));
+	}
+	
+	@Test
+	public void teachersLazyLoaded() {
+		final Campus campus = repository.read(idOfTestCampus()).get();
+		
+		assertEquals(2, campus.getTeachers().size());
+		assertEquals("testM",
+				campus.getTeachers().stream().findFirst().get().getFirstName());
 	}
 }

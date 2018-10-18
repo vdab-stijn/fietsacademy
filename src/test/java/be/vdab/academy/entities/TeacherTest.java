@@ -2,6 +2,7 @@ package be.vdab.academy.entities;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.math.BigDecimal;
@@ -17,19 +18,26 @@ public class TeacherTest {
 	private static final BigDecimal ORIGINAL_WAGES = BigDecimal.valueOf(200L);
 	
 	private Teacher teacher1;
+	private Teacher teacher1Duplicate;
+	private Teacher teacher2;
 	private Campus campus1;
 	
 	@Before
 	public void before() {
 		campus1 = new Campus("test", new Address("", "", "", ""));
 		teacher1 = new Teacher("test", "test", Gender.MALE,
-				ORIGINAL_WAGES, "test@fietsacademy.be", campus1);
+				ORIGINAL_WAGES, "test@fietsacademy.be"/*, campus1*/);
+		teacher1Duplicate = new Teacher("test", "test", Gender.MALE,
+				ORIGINAL_WAGES, "test@fietsacademy.be");
+		teacher2 = new Teacher("test2", "test2", Gender.MALE,
+				ORIGINAL_WAGES, "test2@fietsacademy.be");
 	}
 	
 	@Test
 	public void raise() {
 		teacher1.raise(BigDecimal.TEN);
-		assertEquals(0, BigDecimal.valueOf(220L).compareTo(teacher1.getWages()));
+		assertEquals(0,
+				BigDecimal.valueOf(220L).compareTo(teacher1.getWages()));
 	}
 	
 	@Test(expected = NullPointerException.class)
@@ -40,13 +48,15 @@ public class TeacherTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void raiseWith0ThrowsException() {
 		teacher1.raise(BigDecimal.ZERO);
-		assertEquals(0, ORIGINAL_WAGES.compareTo(teacher1.getWages()));
+		assertEquals(0,
+				ORIGINAL_WAGES.compareTo(teacher1.getWages()));
 	}
 	
 	@Test(expected = IllegalArgumentException.class)
 	public void raiseWithNegativeThrowsException() {
 		teacher1.raise(BigDecimal.valueOf(-1L));
-		assertEquals(0, ORIGINAL_WAGES.compareTo(teacher1.getWages()));
+		assertEquals(0,
+				ORIGINAL_WAGES.compareTo(teacher1.getWages()));
 	}
 	
 	@Test
@@ -99,5 +109,36 @@ public class TeacherTest {
 		assertFalse(teacher1.removeNickname("test2"));
 		assertEquals(1, teacher1.getNicknames().size());
 		assertTrue(teacher1.getNicknames().contains("test"));
+	}
+	
+	@Test
+	public void aCampusCanHaveMoreThanOneTeacher() {
+		assertTrue(campus1.addTeacher(teacher1));
+		assertTrue(campus1.addTeacher(teacher2));
+	}
+	
+	@Test
+	public void teachersAreEqualIfTheyHaveTheSameEmailAddress() {
+		assertEquals(teacher1, teacher1Duplicate);
+	}
+	
+	@Test
+	public void teachersAreDifferentIfTheyHaveDifferentEmailAddresses() {
+		assertNotEquals(teacher1, teacher2);
+	}
+	
+	@Test
+	public void aTeacherDiffersFromNull() {
+		assertNotEquals(teacher1, null);
+	}
+	
+	@Test
+	public void aTeacherDiffersFromAnotherTypeOfObject() {
+		assertNotEquals(teacher1, "");
+	}
+	
+	@Test
+	public void equalTeachersReturnTheSameHashcode() {
+		assertEquals(teacher1.hashCode(), teacher1Duplicate.hashCode());
 	}
 }
