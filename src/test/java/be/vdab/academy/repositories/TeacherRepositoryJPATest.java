@@ -23,6 +23,7 @@ import org.springframework.test.context.junit4.AbstractTransactionalJUnit4Spring
 import org.springframework.test.context.junit4.SpringRunner;
 
 import be.vdab.academy.entities.Campus;
+import be.vdab.academy.entities.Responsibility;
 import be.vdab.academy.entities.Teacher;
 import be.vdab.academy.enums.Gender;
 import be.vdab.academy.queryresults.CountTeachersByWages;
@@ -33,7 +34,9 @@ import be.vdab.academy.valueobjects.Address;
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 @Sql("/insertCampus.sql")
+@Sql("/insertResponsibility.sql")
 @Sql("/insertTeacher.sql")
+@Sql("/insertTeacherResponsibility.sql")
 @Import(TeacherRepositoryJPA.class)
 public class TeacherRepositoryJPATest
 extends AbstractTransactionalJUnit4SpringContextTests {
@@ -246,5 +249,30 @@ extends AbstractTransactionalJUnit4SpringContextTests {
 		final Teacher teacher = repository.read(idOfTestTeacher()).get();
 		
 		assertEquals("test", teacher.getCampus().getName());
+	}
+	
+	@Test
+	public void readResponsibilities() {
+		final Teacher teacher = repository.read(idOfTestTeacher()).get();
+		
+		assertEquals(1, teacher.getResponsibilities().size());
+		assertTrue(teacher.getResponsibilities().contains(
+				new Responsibility("test")));
+	}
+	
+	@Test
+	public void addResponsibility() {
+		final Responsibility responsibility = new Responsibility("test2");
+		manager.persist(responsibility);
+		manager.persist(campus);
+		repository.create(teacher);
+		teacher.addResponsibility(responsibility);
+		manager.flush();
+		
+		assertEquals(responsibility.getId(),
+			super.jdbcTemplate.queryForObject(
+				"SELECT verantwoordelijkheidid " +
+				"FROM docentenverantwoordelijkheden " +
+				"WHERE docentid=?", Long.class, teacher.getId()).longValue());
 	}
 }

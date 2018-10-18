@@ -1,0 +1,1 @@
+INSERT INTO verantwoordelijkheden(naam) VALUES('test');

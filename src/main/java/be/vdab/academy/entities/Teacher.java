@@ -17,6 +17,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -63,6 +64,9 @@ public class Teacher implements Serializable {
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "campusId")
 	private Campus campus;
+	
+	@ManyToMany(mappedBy = "teachers")
+	private Set<Responsibility> responsibilities = new LinkedHashSet<>();
 	
 	protected Teacher() {}
 	
@@ -186,5 +190,27 @@ public class Teacher implements Serializable {
 		*/
 		return getEmailAddress() == null ?
 				0 : getEmailAddress().toLowerCase().hashCode();
+	}
+	
+	public boolean addResponsibility(final Responsibility responsibility) {
+		final boolean added = responsibilities.add(responsibility);
+		
+		if (!responsibility.getTeachers().contains(this))
+			responsibility.addTeacher(this);
+		
+		return added;
+	}
+	
+	public boolean removeResponsibility(final Responsibility responsibility) {
+		final boolean removed = responsibilities.remove(responsibility);
+		
+		if (responsibility.getTeachers().contains(this))
+			responsibility.removeTeacher(this);
+		
+		return removed;
+	}
+	
+	public Set<Responsibility> getResponsibilities() {
+		return Collections.unmodifiableSet(responsibilities);
 	}
 }

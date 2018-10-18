@@ -22,6 +22,7 @@ public class TeacherTest {
 	private Teacher teacher2;
 	private Campus campus1;
 	private Campus campus2;
+	private Responsibility responsibility1;
 	
 	@Before
 	public void before() {
@@ -35,6 +36,8 @@ public class TeacherTest {
 				ORIGINAL_WAGES, "test@fietsacademy.be", campus1);
 		teacher2 = new Teacher("test2", "test2", Gender.MALE,
 				ORIGINAL_WAGES, "test2@fietsacademy.be", campus1);
+		
+		responsibility1 = new Responsibility("EHBO");
 	}
 	
 	@Test
@@ -160,5 +163,17 @@ public class TeacherTest {
 		assertEquals(1, campus1.getTeachers().size());
 		assertEquals(1, campus2.getTeachers().size());
 		assertTrue(campus2.getTeachers().contains(teacher1));
+	}
+	
+	@Test
+	public void addResponsibility() {
+		assertTrue(teacher1.getResponsibilities().isEmpty());
+		assertTrue(teacher1.addResponsibility(responsibility1));
+		assertEquals(1,
+				teacher1.getResponsibilities().size());
+		assertTrue(teacher1.getResponsibilities().contains(responsibility1));
+		assertEquals(1,
+				responsibility1.getTeachers().size());
+		assertTrue(responsibility1.getTeachers().contains(teacher1));
 	}
 }
