@@ -66,6 +66,7 @@ public class Teacher implements Serializable {
 	
 	protected Teacher() {}
 	
+	/*
 	public Teacher(
 			final String firstName,
 			final String lastName,
@@ -74,6 +75,7 @@ public class Teacher implements Serializable {
 			final String emailAddress) {
 		this(firstName, lastName, gender, wages, emailAddress, null);
 	}
+	*/
 	
 	public Teacher(
 			final String firstName,
@@ -88,7 +90,7 @@ public class Teacher implements Serializable {
 		this.wages = wages;
 		this.emailAddress = emailAddress;
 		
-		if (campus != null) setCampus(campus);
+		setCampus(campus);
 		
 		this.nicknames = new LinkedHashSet<>();
 	}
@@ -145,6 +147,9 @@ public class Teacher implements Serializable {
 	
 	public void setCampus(final Campus campus) {
 		if (campus == null) throw new NullPointerException();
+		
+		if (!campus.getTeachers().contains(this))
+			campus.addTeacher(this);
 		
 		this.campus = campus;
 	}

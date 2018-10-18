@@ -21,16 +21,20 @@ public class TeacherTest {
 	private Teacher teacher1Duplicate;
 	private Teacher teacher2;
 	private Campus campus1;
+	private Campus campus2;
 	
 	@Before
 	public void before() {
-		campus1 = new Campus("test", new Address("", "", "", ""));
+		campus1 = new Campus("test",
+				new Address("", "", "", ""));
+		campus2 = new Campus("test2",
+				new Address("test2", "test2", "test2", "test2"));
 		teacher1 = new Teacher("test", "test", Gender.MALE,
-				ORIGINAL_WAGES, "test@fietsacademy.be"/*, campus1*/);
+				ORIGINAL_WAGES, "test@fietsacademy.be", campus1);
 		teacher1Duplicate = new Teacher("test", "test", Gender.MALE,
-				ORIGINAL_WAGES, "test@fietsacademy.be");
+				ORIGINAL_WAGES, "test@fietsacademy.be", campus1);
 		teacher2 = new Teacher("test2", "test2", Gender.MALE,
-				ORIGINAL_WAGES, "test2@fietsacademy.be");
+				ORIGINAL_WAGES, "test2@fietsacademy.be", campus1);
 	}
 	
 	@Test
@@ -113,8 +117,8 @@ public class TeacherTest {
 	
 	@Test
 	public void aCampusCanHaveMoreThanOneTeacher() {
-		assertTrue(campus1.addTeacher(teacher1));
-		assertTrue(campus1.addTeacher(teacher2));
+		assertTrue(campus1.getTeachers().contains(teacher1));
+		assertTrue(campus1.getTeachers().contains(teacher2));
 	}
 	
 	@Test
@@ -140,5 +144,21 @@ public class TeacherTest {
 	@Test
 	public void equalTeachersReturnTheSameHashcode() {
 		assertEquals(teacher1.hashCode(), teacher1Duplicate.hashCode());
+	}
+	
+	@Test
+	public void teacher1WorksAtCampus1() {
+		assertEquals(teacher1.getCampus(), campus1);
+		assertEquals(2, campus1.getTeachers().size());
+		assertTrue(campus1.getTeachers().contains(teacher1));
+	}
+	
+	@Test
+	public void teacher1MovesToCampus2() {
+		teacher1.setCampus(campus2);
+		assertEquals(teacher1.getCampus(), campus2);
+		assertEquals(1, campus1.getTeachers().size());
+		assertEquals(1, campus2.getTeachers().size());
+		assertTrue(campus2.getTeachers().contains(teacher1));
 	}
 }

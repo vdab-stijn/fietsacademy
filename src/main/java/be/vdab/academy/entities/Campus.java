@@ -10,7 +10,6 @@ import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -44,8 +43,9 @@ public class Campus implements Serializable {
 	@OrderBy("fax")
 	private Set<PhoneNumber> phoneNumbers;
 	
-	@OneToMany(fetch = FetchType.LAZY)
-	@JoinColumn(name = "campusId")
+	/*@OneToMany(fetch = FetchType.LAZY)*/
+	@OneToMany(mappedBy = "campus")
+	/*@JoinColumn(name = "campusId")*/
 	@OrderBy("voornaam, familienaam")
 	private Set<Teacher> teachers;
 	
@@ -77,7 +77,17 @@ public class Campus implements Serializable {
 	public boolean addTeacher(final Teacher teacher) {
 		if (teacher == null) throw new NullPointerException();
 		
-		return teachers.add(teacher);
+		final boolean added = teachers.add(teacher);
+		
+		final Campus campus = teacher.getCampus();
+		
+		if (campus != null && this != campus)
+			campus.teachers.remove(teacher);
+		
+		if (this != campus)
+			teacher.setCampus(this);
+		
+		return added;
 	}
 	
 	public Set<Teacher> getTeachers() {

@@ -53,9 +53,9 @@ extends AbstractTransactionalJUnit4SpringContextTests {
 	public void before() {
 		campus = new Campus("", new Address("", "", "", ""));
 		teacher = new Teacher("test", "test", Gender.MALE,
-				BigDecimal.TEN, "test@fietsacademy.be"/*, campus*/);
+				BigDecimal.TEN, "test@fietsacademy.be", campus);
 		
-		campus.addTeacher(teacher);
+		/*campus.addTeacher(teacher);*/
 	}
 	
 	private final long idOfTestTeacher() {
@@ -241,12 +241,10 @@ extends AbstractTransactionalJUnit4SpringContextTests {
 				String.class, teacher.getId()));
 	}
 	
-	/*
 	@Test
 	public void campusLazyLoaded() {
 		final Teacher teacher = repository.read(idOfTestTeacher()).get();
 		
 		assertEquals("test", teacher.getCampus().getName());
 	}
-	*/
 }
