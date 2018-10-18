@@ -44,6 +44,8 @@ public class TeacherRepositoryJPA implements TeacherRepository {
 				"Teacher.findByWagesBetween", Teacher.class)
 				.setParameter("from",  from)
 				.setParameter("to", to)
+				.setHint("javax.persistance.loadgraph", 
+						manager.createEntityGraph(Teacher.WITH_CAMPUS))
 				.getResultList();
 	}
 	

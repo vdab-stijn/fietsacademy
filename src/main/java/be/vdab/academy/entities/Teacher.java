@@ -19,6 +19,10 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedAttributeNode;
+import javax.persistence.NamedEntityGraph;
+import javax.persistence.NamedEntityGraphs;
+import javax.persistence.NamedSubgraph;
 import javax.persistence.Table;
 
 import be.vdab.academy.enums.Gender;
@@ -31,10 +35,30 @@ import be.vdab.academy.enums.Gender;
 	query="SELECT d FROM Teacher d WHERE d.wages BETWEEN :from AND :to " +
 			"ORDER BY d.wages, d.id")
 */
+@NamedEntityGraphs( {
+	@NamedEntityGraph(
+		name = Teacher.WITH_CAMPUS,
+		attributeNodes = @NamedAttributeNode("campus")),
+	@NamedEntityGraph(
+		name = "Teacher.withCampusAndResponsibilities",
+		attributeNodes = {
+			@NamedAttributeNode("campus"),
+			@NamedAttributeNode("responsibilities")
+		}),
+	@NamedEntityGraph(
+		name = "Teacher.withCampusAndManager",
+		attributeNodes =
+			@NamedAttributeNode(value = "campus", subgraph = "withManager"),
+		subgraphs = @NamedSubgraph(
+				name = "withManager",
+				attributeNodes = @NamedAttributeNode("manager")))
+})
 public class Teacher implements Serializable {
 
 	/** Implements Serializable. */
 	private static final long serialVersionUID = -2152663213264949852L;
+	
+	public static final String WITH_CAMPUS = "Teacher.withCampus";
 
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Id
