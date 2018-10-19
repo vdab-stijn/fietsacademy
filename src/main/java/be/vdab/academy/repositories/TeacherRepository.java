@@ -11,6 +11,7 @@ import be.vdab.academy.queryresults.IdAndEmailAddress;
 public interface TeacherRepository {
 
 	Optional<Teacher> read(final long id);
+	Optional<Teacher> readWithLock(final long id);
 	
 	List<Teacher> findAll();
 	List<Teacher> findByWagesBetween(

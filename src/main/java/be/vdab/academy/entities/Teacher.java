@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
+import java.sql.Timestamp;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -24,6 +25,7 @@ import javax.persistence.NamedEntityGraph;
 import javax.persistence.NamedEntityGraphs;
 import javax.persistence.NamedSubgraph;
 import javax.persistence.Table;
+import javax.persistence.Version;
 
 import be.vdab.academy.enums.Gender;
 
@@ -78,6 +80,10 @@ public class Teacher implements Serializable {
 	private BigDecimal wages;
 	@Column(name = "emailAdres")
 	private String emailAddress;
+	@Version
+	@Column(name = "versie")
+	/*private long version;*/
+	private Timestamp version;
 	
 	@ElementCollection
 	@CollectionTable(name = "docentenbijnamen",

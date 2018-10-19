@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.persistence.EntityManager;
+import javax.persistence.LockModeType;
 
 import org.springframework.stereotype.Repository;
 
@@ -24,6 +25,11 @@ public class TeacherRepositoryJPA implements TeacherRepository {
 	@Override
 	public Optional<Teacher> read(final long id) {
 		return Optional.ofNullable(manager.find(Teacher.class, id));
+	}
+	@Override
+	public Optional<Teacher> readWithLock(final long id) {
+		return Optional.ofNullable(manager.find(
+				Teacher.class, id, LockModeType.PESSIMISTIC_WRITE));
 	}
 	
 	@Override
