@@ -24,7 +24,8 @@ public class DefaultTeacherService implements TeacherService {
 	@Override
 	@Transactional(readOnly = false, isolation = Isolation.READ_COMMITTED)
 	public void raise(long id, BigDecimal percentage) {
-		Optional<Teacher> teacher = teacherRepository.readWithLock(id);
+//		Optional<Teacher> teacher = teacherRepository.readWithLock(id);
+		Optional<Teacher> teacher = teacherRepository.read(id);
 		
 		if (teacher.isPresent())
 			teacher.get().raise(percentage);

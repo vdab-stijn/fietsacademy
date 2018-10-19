@@ -28,11 +28,11 @@ public abstract class Course implements Serializable {
 		this.name = name;
 	}
 	
-	public final String getId() {
+	public String getId() {
 		return id;
 	}
 	
-	public final String getName() {
+	public String getName() {
 		return name;
 	}
 }

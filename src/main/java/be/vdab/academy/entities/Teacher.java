@@ -46,14 +46,14 @@ import be.vdab.academy.enums.Gender;
 		attributeNodes = {
 			@NamedAttributeNode("campus"),
 			@NamedAttributeNode("responsibilities")
-		}),
+		})/*,
 	@NamedEntityGraph(
 		name = "Teacher.withCampusAndManager",
 		attributeNodes =
 			@NamedAttributeNode(value = "campus", subgraph = "withManager"),
 		subgraphs = @NamedSubgraph(
 				name = "withManager",
-				attributeNodes = @NamedAttributeNode("manager")))
+				attributeNodes = @NamedAttributeNode("manager")))*/
 })
 public class Teacher implements Serializable {
 

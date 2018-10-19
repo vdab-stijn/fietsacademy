@@ -31,8 +31,8 @@ public class Responsibility implements Serializable {
 	@ManyToMany
 	@JoinTable(
 			name = "docentenverantwoordelijkheden",
-			joinColumns = @JoinColumn(name = "verantwoordelijkheidid"),
-			inverseJoinColumns = @JoinColumn(name = "docentid"))
+			joinColumns = @JoinColumn(name = "verantwoordelijkheidId"),
+			inverseJoinColumns = @JoinColumn(name = "docentId"))
 	private Set<Teacher> teachers = new LinkedHashSet<>();
 	
 	protected Responsibility() {}

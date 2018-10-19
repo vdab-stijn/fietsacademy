@@ -35,6 +35,7 @@ public class DefaultTeacherServiceTest {
 		campus = new Campus("", new Address("", "", "", ""));
 		teacher = new Teacher("test", "test", Gender.MALE,
 				BigDecimal.valueOf(100L), "test@fietsacademy.be", campus);
+		
 		when(teacherRepository.read(1)).thenReturn(Optional.of(teacher));
 		when(teacherRepository.read(-1)).thenReturn(Optional.empty());
 		
